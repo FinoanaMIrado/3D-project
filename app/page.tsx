@@ -23,7 +23,7 @@ export default function Home() {
 				className="h-screen w-full rounded-lg overflow-hidden"
 			/>
 			<div className="h-screen inset-0 pointer-events-none fixed flex items-center justify-center text-center px-3 mix-blend-exclusion text-white">
-				<h1 className="font-serif text-4xl md:text-7xl tracking-tight">
+				<h1 className="font-serif text-7xl leading-[0.82] font-black sm:text-8xl md:text-[12rem]">
 					Adala
 				</h1>
 			</div>
