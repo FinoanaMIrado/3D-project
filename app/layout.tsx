@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Bodoni_Moda, Geist_Mono } from 'next/font/google';
+import BackgroundMusic from '@/components/BackgroundMusic';
 import "./globals.css"
 
 const geistMono = Geist_Mono({
@@ -30,6 +31,7 @@ export default function RootLayout({
 				className={`${geistMono.variable} ${bodoniModa.variable} antialiased`}
 			>
 				{children}
+				<BackgroundMusic />
 			</body>
 		</html>
 	);
