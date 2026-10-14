@@ -24,16 +24,16 @@ export default function Home() {
 			/>
 			<div className="h-screen inset-0 pointer-events-none fixed flex items-center justify-center text-center px-3 mix-blend-exclusion text-white">
 				<h1 className="font-serif text-4xl md:text-7xl tracking-tight">
-					<span className="italic">AMPELATANANAO</span> ny fianako rehetra
+					Adala
 				</h1>
 			</div>
 
-			<div className="text-center fixed bottom-10 left-0 right-0 font-mono uppercase text-[11px] font-semibold">
+			{/* <div className="text-center fixed bottom-10 left-0 right-0 font-mono uppercase text-[11px] font-semibold">
 				<p>Use mouse wheel, arrow keys, or touch to navigate</p>
 				<p className=" opacity-60">
 					Auto-play resumes after 3 seconds of inactivity
 				</p>
-			</div>
+			</div> */}
 		</main>
 	);
 }
