@@ -17,7 +17,7 @@ const bodoniModa = Bodoni_Moda({
 export const metadata: Metadata = {
 	title: 'Fiainana vaovao',
 	description: 'Bored -> this',
-    // generator: 'v0.app'
+    
 };
 
 export default function RootLayout({
