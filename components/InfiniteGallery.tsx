@@ -250,7 +250,7 @@ function GalleryScene({
 		filter.type = 'lowpass';
 		filter.frequency.value = 1400 + intensity * 4200;
 		gain.gain.setValueAtTime(0.0001, now);
-		gain.gain.linearRampToValueAtTime(0.012 + intensity * 0.035, now + 0.002);
+		gain.gain.linearRampToValueAtTime(0.03 + intensity * 0.09, now + 0.002);
 		gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
 		source.connect(filter);
 		filter.connect(gain);

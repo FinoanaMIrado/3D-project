@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const MUSIC_SRC = '/audio/ambiance.mp3';
+const MUSIC_VOLUME = 0.25;
 
 export default function BackgroundMusic() {
 	const audioRef = useRef<HTMLAudioElement>(null);
@@ -17,6 +18,7 @@ export default function BackgroundMusic() {
 
 		if (audio.paused) {
 			try {
+				audio.volume = MUSIC_VOLUME;
 				await audio.play();
 				setIsPlaying(true);
 			} catch {
