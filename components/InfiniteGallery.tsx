@@ -222,6 +222,49 @@ function GalleryScene({
 	const [autoPlay, setAutoPlay] = useState(true);
 	const lastInteraction = useRef(Date.now());
 	const lastTouchY = useRef<number | null>(null);
+	const scrollAudioContext = useRef<AudioContext | null>(null);
+	const clickNoise = useRef<AudioBuffer | null>(null);
+
+	const playScrollClick = useCallback((delta: number) => {
+		if (typeof window === 'undefined' || !window.AudioContext) return;
+
+		const context =
+			scrollAudioContext.current ??
+			(scrollAudioContext.current = new window.AudioContext());
+		if (context.state === 'suspended') void context.resume();
+
+		if (!clickNoise.current) {
+			const buffer = context.createBuffer(1, context.sampleRate * 0.025, context.sampleRate);
+			const samples = buffer.getChannelData(0);
+			for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+			clickNoise.current = buffer;
+		}
+
+		const source = context.createBufferSource();
+		const filter = context.createBiquadFilter();
+		const gain = context.createGain();
+		const now = context.currentTime;
+		const intensity = Math.min(Math.abs(delta) / 80, 1);
+
+		source.buffer = clickNoise.current;
+		filter.type = 'lowpass';
+		filter.frequency.value = 1400 + intensity * 4200;
+		gain.gain.setValueAtTime(0.0001, now);
+		gain.gain.linearRampToValueAtTime(0.012 + intensity * 0.035, now + 0.002);
+		gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
+		source.connect(filter);
+		filter.connect(gain);
+		gain.connect(context.destination);
+		source.start(now);
+		source.stop(now + 0.025);
+	}, []);
+
+	useEffect(
+		() => () => {
+			if (scrollAudioContext.current) void scrollAudioContext.current.close();
+		},
+		[]
+	);
 
 	// Normalize images to objects
 	const normalizedImages = useMemo(
@@ -297,11 +340,12 @@ function GalleryScene({
 	const handleWheel = useCallback(
 		(event: WheelEvent) => {
 			event.preventDefault();
+			playScrollClick(event.deltaY);
 			setScrollVelocity((prev) => prev + event.deltaY * 0.01 * speed);
 			setAutoPlay(false);
 			lastInteraction.current = Date.now();
 		},
-		[speed]
+		[speed, playScrollClick]
 	);
 
 	const handleTouchStart = useCallback((event: TouchEvent) => {
@@ -321,11 +365,12 @@ function GalleryScene({
 			event.preventDefault();
 			const deltaY = lastTouchY.current - touch.clientY;
 			lastTouchY.current = touch.clientY;
+			playScrollClick(deltaY);
 			setScrollVelocity((prev) => prev + deltaY * 0.02 * speed);
 			setAutoPlay(false);
 			lastInteraction.current = Date.now();
 		},
-		[speed]
+		[speed, playScrollClick]
 	);
 
 	const handleTouchEnd = useCallback(() => {
@@ -336,16 +381,18 @@ function GalleryScene({
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+				playScrollClick(-40);
 				setScrollVelocity((prev) => prev - 2 * speed);
 				setAutoPlay(false);
 				lastInteraction.current = Date.now();
 			} else if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+				playScrollClick(40);
 				setScrollVelocity((prev) => prev + 2 * speed);
 				setAutoPlay(false);
 				lastInteraction.current = Date.now();
 			}
 		},
-		[speed]
+		[speed, playScrollClick]
 	);
 
 	useEffect(() => {
