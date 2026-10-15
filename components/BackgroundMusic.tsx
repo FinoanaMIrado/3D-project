@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const MUSIC_SRC: string | null = null;
+const MUSIC_SRC = '/audio/ambiance.mp3';
 
 export default function BackgroundMusic() {
 	const audioRef = useRef<HTMLAudioElement>(null);
